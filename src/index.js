@@ -1,8 +1,10 @@
 const express = require('express');
 const {uuid, isUuid} = require('uuidv4');
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 
@@ -35,6 +37,8 @@ function validateIDProject (req, res, next) {
 
 app.use(logRequest);
 
+app.use('/projects/:id', validateIDProject);
+
 app.get('/projects', (req, res) => {
     //const {title, owner} = req.query;
 
@@ -49,7 +53,7 @@ app.post('/projects', (req, res) => {
     return res.json(project)
 })
 
-app.put('/projects/:id', validateIDProject, (req, res) => {
+app.put('/projects/:id', (req, res) => {
     const {id} = req.params;
     const { title, owner} = req.body;
 
@@ -72,7 +76,7 @@ app.put('/projects/:id', validateIDProject, (req, res) => {
 })
 
 
-app.delete('/projects/:id', validateIDProject, (req, res) => {
+app.delete('/projects/:id', (req, res) => {
     const {id} = req.params;
 
     const projectIndex = projects.findIndex(project => project.id === id);
